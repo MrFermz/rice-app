@@ -118,10 +118,11 @@ function connectTableAdmin() {
         Ad_user VARCHAR(250) NOT NULL, \
         Ad_pass VARCHAR(250) NOT NULL, \
         Ad_date VARCHAR(250), \
-        PRIMARY KEY (Ad_id) \
+        PRIMARY KEY (Ad_id), \
+		UNIQUE (Ad_user) \
     )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
-
+        console.log('Table admin available')
     })
 }
 
@@ -156,7 +157,8 @@ function connectTableStaff() {
             St_position VARCHAR(250), \
             St_date VARCHAR(250), \
             Pm_id INT, \
-            PRIMARY KEY (St_id) \
+            PRIMARY KEY (St_id), \
+			UNIQUE (St_user) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
         if (error) throw error
@@ -182,9 +184,9 @@ function connectTablePayment() {
 function connectTableRice() {
     let sql = 'CREATE TABLE IF NOT EXISTS rice (\
             Rc_id INT AUTO_INCREMENT, \
-            Rc_km VARCHAR(20), \
+            Rc_kg VARCHAR(20), \
             Rc_sack VARCHAR(10), \
-            RC_sum INT(10), \
+            Rc_sum VARCHAR(10), \
             St_id INT, \
             PRIMARY KEY (Rc_id) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
@@ -209,7 +211,7 @@ function connectTableDividend() {
 }
 
 function connectTableRicePrice() {
-    let sql = 'CREATE TABLE IF NOT EXISTS rice_pice(\
+    let sql = 'CREATE TABLE IF NOT EXISTS rice_price(\
             Pr_id INT PRIMARY KEY AUTO_INCREMENT, \
             Pr_price VARCHAR(10) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'

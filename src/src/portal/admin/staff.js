@@ -188,7 +188,7 @@ export default class staff extends Component {
                 onClose={this.toggleRegister.bind(this)}>
                 <DialogContent>
                     <Typography>
-                        {trans.register}
+                        {trans.add}{trans.staff}
                     </Typography>
                 </DialogContent>
                 <DialogContent>

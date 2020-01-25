@@ -1,7 +1,7 @@
 {
     "host": "localhost",
     "user": "root",
-    "pass": "1234",
+    "pass": "",
     "database": "rice",
     "port": 8082,
     "path": "api"

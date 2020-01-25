@@ -188,7 +188,7 @@ export default class member extends Component {
                 onClose={this.toggleRegister.bind(this)}>
                 <DialogContent>
                     <Typography>
-                        {trans.register}
+                        {trans.add}{trans.member}
                     </Typography>
                 </DialogContent>
                 <DialogContent>

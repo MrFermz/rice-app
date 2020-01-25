@@ -83,6 +83,23 @@ app.post('/login_admin', (req, res) => {
     })
 })
 
+app.post('/self_Ad_id', (req, res) => {
+    console.log(req.body)
+
+    let sql = `SELECT Ad_id FROM admin WHERE Ad_user = '${req.body.Ad_user}'`
+
+    database.conn.query(sql, function (err, result) {
+        if (err) {
+            res.json(result_failed)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+                console.log(result)
+            }
+        }
+    })
+})
+
 
 
 // MEMBER API
@@ -306,5 +323,105 @@ app.get('/staff_list', verifyToken, (req, res) => {
         }
     })
 })
+
+app.post('/self_St_id', (req, res) => {
+    console.log(req.body)
+
+    let sql = `SELECT St_id FROM staff WHERE St_user = '${req.body.St_user}'`
+
+    database.conn.query(sql, function (err, result) {
+        if (err) {
+            res.json(result_failed)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+                console.log(result)
+            }
+        }
+    })
+})
+
+
+// PRICE
+app.get('/rice_price', verifyToken, (req, res) => {
+
+    let sql = 'SELECT * from rice_price'
+
+    database.conn.query(sql, function (err, result) {
+        if (err) {
+            res.json(result_failed)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+                console.log(result)
+            }
+        }
+    })
+})
+
+app.post('/rice_save', (req, res) => {
+    console.log(req.body)
+
+    let sql = `INSERT INTO rice (Rc_kg, Rc_sack, Rc_sum, St_id) VALUES ?`
+    let values = [
+        [req.body.Rc_kg, req.body.Rc_sack, req.body.Rc_sum, req.body.St_id]
+    ]
+
+    database.conn.query(sql, [values], function (error, result) {
+        if (error) {
+            res.json(result_failed)
+            console.log(error)
+        } else {
+            const finalResult = {
+                result: "success",
+                data: ""
+            }
+            res.json(finalResult)
+            console.log("1 record updated")
+        }
+    })
+})
+
+
+// RICE
+app.get('/payment_id', verifyToken, (req, res) => {
+
+    let sql = 'SELECT MAX(Pm_id) from payment'
+
+    database.conn.query(sql, function (err, result) {
+        if (err) {
+            res.json(result_failed)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+                console.log(result)
+            }
+        }
+    })
+})
+
+app.post('/payment_save', (req, res) => {
+    console.log(req.body)
+
+    let sql = `INSERT INTO payment (Pm_payments, Pm_date, Mb_id, St_id) VALUES ?`
+    let values = [
+        [req.body.Pm_payments, req.body.Pm_date, req.body.Mb_id, req.body.St_id]
+    ]
+
+    database.conn.query(sql, [values], function (error, result) {
+        if (error) {
+            res.json(result_failed)
+            console.log(error)
+        } else {
+            const finalResult = {
+                result: "success",
+                data: ""
+            }
+            res.json(finalResult)
+            console.log("1 record updated")
+        }
+    })
+})
+
 
 module.exports = app

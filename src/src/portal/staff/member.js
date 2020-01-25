@@ -74,7 +74,7 @@ export default class member extends Component {
             console.log(error)
         })
     }
-    
+
     // TOGGLE FUNCTION
     toggleRegister() {
         this.setState({ openRegister: !this.state.openRegister })
@@ -125,7 +125,7 @@ export default class member extends Component {
                 })
         }
     }
-    
+
     // DELETE MEMBER FROM DATABASE
     onDelete(Mb_id) {
         console.log(Mb_id)
@@ -188,7 +188,7 @@ export default class member extends Component {
                 onClose={this.toggleRegister.bind(this)}>
                 <DialogContent>
                     <Typography>
-                        {trans.register}
+                        {trans.add}{trans.member}
                     </Typography>
                 </DialogContent>
                 <DialogContent>
