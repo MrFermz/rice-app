@@ -5,7 +5,6 @@ import {
     Typography,
     Button
 } from '@material-ui/core'
-
 import Sidemenu from '../sidemenu/sidemenu'
 
 export default class staff extends Component {

@@ -107,24 +107,43 @@ app.post('/register_member', (req, res) => {
     // console.log(req.body)
     const obj = req.body
 
-    let values = [
-        [req.body.fname, req.body.lname, req.body.email, req.body.tel, req.body.address, req.body.date]
-    ]
-    console.log(values)
-    let sql = `INSERT INTO member (Mb_fname, Mb_lname, Mb_email, Mb_tel, Mb_address, Mb_date) VALUES ?`
-    database.conn.query(sql, [values], function (err, result) {
+
+    year = new Date().getFullYear()
+
+    let sqlDividend = `INSERT INTO dividend (Di_year, Di_num) VALUES (${year}, ${req.body.dividend})`
+    database.conn.query(sqlDividend, function (err, result) {
         if (err) {
             res.json(result_failed)
             console.log(err)
         } else {
-            const finalResult = {
-                result: "success",
-                data: ""
-            }
-            res.json(finalResult)
-            console.log("1 record inserted")
+            let Di_id = result['insertId']
+
+            let valuesMember = [
+                [req.body.fname, req.body.lname, req.body.email, req.body.tel, req.body.address, req.body.date, Di_id]
+            ]
+            console.log(valuesMember)
+            let sqlMember = `INSERT INTO member (Mb_fname, Mb_lname, Mb_email, Mb_tel, Mb_address, Mb_date, Di_id) VALUES ?`
+            database.conn.query(sqlMember, [valuesMember], function (err, result) {
+                if (err) {
+                    res.json(result_failed)
+                    console.log(err)
+                } else {
+                    const finalResult = {
+                        result: "success",
+                        data: ""
+                    }
+                    res.json(finalResult)
+                    console.log("1 record inserted")
+                }
+            })
         }
     })
+
+
+
+
+
+
 })
 
 app.post('/delete_member', (req, res) => {
@@ -148,7 +167,7 @@ app.post('/delete_member', (req, res) => {
 })
 
 app.post('/update_member', (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
 
     let sql = `UPDATE member 
             SET Mb_fname = '${req.body.fname}', 
@@ -419,6 +438,69 @@ app.post('/payment_save', (req, res) => {
             }
             res.json(finalResult)
             console.log("1 record updated")
+        }
+    })
+})
+
+
+// DIVIDEND
+app.post('/dividend_list', (req, res) => {
+    console.log(req.body)
+
+    let sql = `SELECT * FROM dividend WHERE Di_id=${req.body.Di_id}`
+
+    database.conn.query(sql, function (err, result) {
+        if (err) {
+            res.json(result_failed)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+                console.log(result)
+            }
+        }
+    })
+})
+
+
+app.post('/update_dividend', (req, res) => {
+    console.log(req.body)
+
+    let sql = `UPDATE dividend 
+            SET Di_num = '${req.body.dividend}'
+            WHERE Di_id = ${req.body.Di_id}`
+
+    database.conn.query(sql, function (error, result) {
+        if (error) {
+            res.json(result_failed)
+            console.log(error)
+        } else {
+            const finalResult = {
+                result: "success",
+                data: ""
+            }
+            res.json(finalResult)
+            console.log("1 record updated")
+        }
+    })
+})
+
+
+app.post('/delete_dividend', (req, res) => {
+    console.log(req.body)
+
+    let sql = `DELETE FROM dividend 
+            WHERE Di_id = ${req.body.Di_id}`
+
+    database.conn.query(sql, function (error, result) {
+        if (error) {
+            res.json(result_failed)
+        } else {
+            const finalResult = {
+                result: "success",
+                data: ""
+            }
+            res.json(finalResult)
+            console.log("1 record deleted")
         }
     })
 })

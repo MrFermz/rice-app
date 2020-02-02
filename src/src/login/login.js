@@ -20,7 +20,8 @@ export default class login extends Component {
             password: '',
             type: 'staff',
             storedToken: localStorage.getItem('token'),
-            storedtype: localStorage.getItem('type')
+            storedtype: localStorage.getItem('type'),
+            message: ''
         }
     }
 
@@ -31,25 +32,20 @@ export default class login extends Component {
     validAuth() {
         const { storedToken, storedtype } = this.state
         if (storedToken !== null && storedtype !== null) {
-            console.log('Already login')
             this.props.history.push(`/${storedtype}`)
         } else {
-            // this.props.history.push('/')
+            this.props.history.push('/')
         }
     }
 
     onChange = (e) => {
         const { name, value } = e.target
         this.setState({ [name]: value })
-        console.log([name], value)
     }
 
     onLogin() {
         const { username, password, type } = this.state
         const data = { username, password }
-
-        console.log(data)
-
         axios.post(`http://${config.host}:${config.port}/${config.path}/login_${type}`, data)
             .then(res => {
                 const result = res.data
@@ -61,7 +57,6 @@ export default class login extends Component {
                     localStorage.setItem('username', username)
 
                     //show successful
-                    console.log('Login Success')
                     let passtype
                     switch (type) {
                         case 'admin':
@@ -79,15 +74,16 @@ export default class login extends Component {
                     }
                     this.props.history.push(`/${passtype}`)
                 } else {
-                    console.log('Login falied')
+                    this.setState({ message: 'ล็อกอินไม่สำเร็จ' })
                 }
             })
             .catch(error => {
-                console.log(error)
+                this.setState({ message: error })
             })
     }
 
     render() {
+        const { message } = this.state
         return (
             <Fragment>
                 <Grid
@@ -118,9 +114,9 @@ export default class login extends Component {
                         <MenuItem value='staff'>{trans.staff}</MenuItem>
                         <MenuItem value='admin'>{trans.admin}</MenuItem>
                     </Select>
+                    <Typography
+                        style={{ color: 'red', marginTop: '10px' }}>{message}</Typography>
                     <Fab
-                        // type='onSubmitง
-                        // variant='contained'
                         onClick={this.onLogin.bind(this)}
                         color='primary'
                         style={{ marginTop: '20px' }}>

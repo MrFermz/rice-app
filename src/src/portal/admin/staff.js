@@ -26,7 +26,6 @@ import {
     Done,
     Edit
 } from '@material-ui/icons'
-
 import Sidemenu from '../sidemenu/sidemenu'
 
 export default class staff extends Component {
@@ -59,7 +58,6 @@ export default class staff extends Component {
 
     getStaffList() {
         const { storedToken } = this.state
-
         axios.get(`http://${config.host}:${config.port}/${config.path}/staff_list`, {
             headers: { 'x-access-token': storedToken }
         }).then(res => {
@@ -73,7 +71,6 @@ export default class staff extends Component {
     validAuth() {
         const { storedToken, type } = this.state
         if (storedToken !== null && type === 'admin') {
-            console.log('Already login admin')
             this.getStaffList()
         } else {
             this.props.history.push('/')
@@ -101,13 +98,10 @@ export default class staff extends Component {
         let time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`
         date = `${date} ${time}`
         const data = { username, password, fname, lname, address, age, salary, position, date }
-        console.log(data)
-
         if (username && (password === re_password) && fname && lname && address && age && salary && position) {
             axios.post(`http://${config.host}:${config.port}/${config.path}/register_staff`, data)
                 .then(res => {
                     const result = res.data
-                    console.log(result)
                     if (result.result === 'success') {
                         console.log('Register Success')
                     } else {
@@ -125,11 +119,9 @@ export default class staff extends Component {
     onChange = (e) => {
         const { name, value } = e.target
         this.setState({ [name]: value })
-        console.log([name], value)
     }
 
     onDelete(St_id) {
-        console.log(St_id)
         const data = { St_id }
         axios.post(`http://${config.host}:${config.port}/${config.path}/delete_staff`, data)
             .then(res => {
@@ -149,7 +141,6 @@ export default class staff extends Component {
     onUpdate(St_id) {
         const { fname, lname, address, age, salary, position } = this.state
         const data = { St_id, fname, lname, address, age, salary, position }
-
         if (fname && lname && address && age && salary && position) {
             axios.post(`http://${config.host}:${config.port}/${config.path}/update_staff`, data)
                 .then(res => {
@@ -383,7 +374,6 @@ export default class staff extends Component {
 
     render() {
         const { result } = this.state
-        console.log(result)
         return (
             <Fragment>
                 {this.renderRegister()}

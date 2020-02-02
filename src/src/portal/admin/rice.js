@@ -6,15 +6,12 @@ import {
     Grid,
     Typography,
     TextField,
-    Fab,
-    Card,
-    CardContent
+    Fab
 } from '@material-ui/core'
 import {
     Save
 } from '@material-ui/icons'
 import { Autocomplete } from '@material-ui/lab'
-
 import Sidemenu from '../sidemenu/sidemenu'
 
 export default class rice extends Component {
@@ -44,7 +41,6 @@ export default class rice extends Component {
     validAuth() {
         const { storedToken, type } = this.state
         if (storedToken !== null && type === 'admin') {
-            console.log('Already login admin')
             this.initPayslip()
         } else {
             this.props.history.push('/')
@@ -54,7 +50,6 @@ export default class rice extends Component {
     onChange = (e) => {
         const { name, value } = e.target
         this.setState({ [name]: value })
-        console.log([name], value)
     }
 
     initPayslip() {
@@ -67,7 +62,6 @@ export default class rice extends Component {
 
     onSelectMember(val) {
         if (val) {
-            console.log(val.Mb_id)
             this.setState({ Mb_id: val.Mb_id })
         } else {
             this.setState({ Mb_id: null })
@@ -83,7 +77,6 @@ export default class rice extends Component {
 
     getMemberList() {
         const { storedToken } = this.state
-
         axios.get(`http://${config.host}:${config.port}/${config.path}/member_list`, {
             headers: { 'x-access-token': storedToken }
         }).then(res => {
@@ -96,14 +89,12 @@ export default class rice extends Component {
 
     getPayment() {
         const { storedToken } = this.state
-
         axios.get(`http://${config.host}:${config.port}/${config.path}/payment_id`, {
             headers: { 'x-access-token': storedToken }
         }).then(res => {
             const result = res.data
             let paymentNo = result[0]['MAX(Pm_id)'] + 1
             this.setState({ paymentNo })
-            console.log(paymentNo)
         }).catch(error => {
             console.log(error)
         })
@@ -111,14 +102,12 @@ export default class rice extends Component {
 
     getRicePrice() {
         const { storedToken } = this.state
-
         axios.get(`http://${config.host}:${config.port}/${config.path}/rice_price`, {
             headers: { 'x-access-token': storedToken }
         }).then(res => {
             const result = res.data
             let rice_price = result[0]['Pr_price']
             this.setState({ rice_price })
-            console.log(rice_price)
         }).catch(error => {
             console.log(error)
         })
@@ -137,7 +126,6 @@ export default class rice extends Component {
                 const result = res.data
                 let self_id = result[0]['Ad_id']
                 this.setState({ self_id })
-                console.log(self_id)
             }).catch(error => {
                 console.log(error)
             })
@@ -156,24 +144,19 @@ export default class rice extends Component {
             Rc_sack: paddy,
             Rc_sum: this.getSum(rice, rice_price)
         }
-
         if (currentDate && Mb_id && self_id && rice && paddy && sack) {
-            console.log(data2)
             axios.post(`http://${config.host}:${config.port}/${config.path}/payment_save`, data)
                 .then(res => {
                     const result = res.data
-                    console.log(result)
                     if (result.result === 'success') {
                         console.log('Save Success')
                     } else {
                         console.log('Save Failed')
                     }
-                    // window.location.reload()
                 })
                 .catch(error => {
                     console.log(error)
                 })
-
             axios.post(`http://${config.host}:${config.port}/${config.path}/rice_save`, data2)
                 .then(res => {
                     const result = res.data
@@ -183,7 +166,7 @@ export default class rice extends Component {
                     } else {
                         console.log('Save Failed')
                     }
-                    // window.location.reload()
+                    window.location.reload()
                 })
                 .catch(error => {
                     console.log(error)
@@ -192,7 +175,7 @@ export default class rice extends Component {
     }
 
     render() {
-        const { currentDate, result, selected, selfName, amount, paddy, rice, sack, paymentNo, rice_price, Mb_id, self_id } = this.state
+        const { currentDate, result, paddy, rice, sack, paymentNo, rice_price, Mb_id, self_id } = this.state
         return (
             < Fragment >
                 <Grid
@@ -242,7 +225,7 @@ export default class rice extends Component {
                                 InputProps={{ inputProps: { min: 0 } }} />
                             <TextField
                                 label={`${trans.kg} (${trans._rice})`}
-                                style={{ marginTop: 20, width: 300 }}
+                                style={{ marginLeft: 20, marginTop: 20, width: 300 }}
                                 type='number'
                                 variant='outlined'
                                 name='rice'

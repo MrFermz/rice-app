@@ -44,7 +44,8 @@ export default class member extends Component {
             email: '',
             tel: '',
             address: '',
-            Mb_id: ''
+            Mb_id: '',
+            dividend: 0
         }
     }
 
@@ -55,7 +56,6 @@ export default class member extends Component {
     validAuth() {
         const { storedToken, type } = this.state
         if (storedToken !== null && type === 'staff') {
-            console.log('Already login admin')
             this.getMemberList()
         } else {
             this.props.history.push('/')
@@ -64,7 +64,6 @@ export default class member extends Component {
 
     getMemberList() {
         const { storedToken } = this.state
-
         axios.get(`http://${config.host}:${config.port}/${config.path}/member_list`, {
             headers: { 'x-access-token': storedToken }
         }).then(res => {
@@ -86,32 +85,27 @@ export default class member extends Component {
 
     toggleUpdate() {
         this.setState({ openUpdate: !this.state.openUpdate })
-
     }
 
     // SET STATE
     onChange = (e) => {
         const { name, value } = e.target
         this.setState({ [name]: value })
-        console.log([name], value)
     }
 
     // SAVE MEMBER TO DATABASE
     onSave() {
-        const { fname, lname, email, tel, address } = this.state
+        const { fname, lname, email, tel, address, dividend } = this.state
         const options = { year: 'numeric', month: 'long', day: 'numeric' }
         const today = new Date()
         let date = today.toLocaleDateString('th-th', options)
         let time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`
         date = `${date} ${time}`
-        const data = { fname, lname, email, tel, address, date }
-        console.log(data)
-
+        const data = { fname, lname, email, tel, address, date, dividend }
         if (fname && lname && email && tel && address) {
             axios.post(`http://${config.host}:${config.port}/${config.path}/register_member`, data)
                 .then(res => {
                     const result = res.data
-                    console.log(result)
                     if (result.result === 'success') {
                         console.log('Register Success')
                     } else {
@@ -127,11 +121,18 @@ export default class member extends Component {
     }
 
     // DELETE MEMBER FROM DATABASE
-    onDelete(Mb_id) {
-        console.log(Mb_id)
+    onDelete(Mb_id, Di_id) {
         const data = { Mb_id }
-        axios.post(`http://${config.host}:${config.port}/${config.path}/delete_member`, data)
-            .then(res => {
+        axios.post(`http://${config.host}:${config.port}/${config.path}/delete_member`, data).then(res => {
+            const result = res.data
+            if (result.result === 'success') {
+                console.log('Delete Success')
+            } else {
+                console.log('Delete Failed')
+            }
+        }).then(() => {
+            let dataDividend = { Di_id }
+            axios.post(`http://${config.host}:${config.port}/${config.path}/delete_dividend`, dataDividend).then(res => {
                 const result = res.data
                 if (result.result === 'success') {
                     console.log('Delete Success')
@@ -140,19 +141,26 @@ export default class member extends Component {
                     console.log('Delete Failed')
                 }
             })
-            .catch(error => {
-                console.log(error)
-            })
+        }).catch(error => {
+            console.log(error)
+        })
     }
 
     // UPDATE MEMBER DATA AND SAVE TO DATABASE
     onUpdate(Mb_id) {
-        const { fname, lname, email, tel, address } = this.state
+        const { fname, lname, email, tel, address, dividend, Di_id } = this.state
         const data = { Mb_id, fname, lname, email, tel, address }
-
         if (fname && lname && email && tel && address) {
-            axios.post(`http://${config.host}:${config.port}/${config.path}/update_member`, data)
-                .then(res => {
+            axios.post(`http://${config.host}:${config.port}/${config.path}/update_member`, data).then(res => {
+                const result = res.data
+                if (result.result === 'success') {
+                    console.log('Update Success')
+                } else {
+                    console.log('Update Failed')
+                }
+            }).then(() => {
+                let dataDividend = { Di_id, dividend }
+                axios.post(`http://${config.host}:${config.port}/${config.path}/update_dividend`, dataDividend).then(res => {
                     const result = res.data
                     if (result.result === 'success') {
                         console.log('Update Success')
@@ -161,9 +169,9 @@ export default class member extends Component {
                         console.log('Update Failed')
                     }
                 })
-                .catch(error => [
-                    console.log(error)
-                ])
+            }).catch(error => [
+                console.log(error)
+            ])
         }
     }
 
@@ -217,6 +225,21 @@ export default class member extends Component {
                         multiline
                         rows='5'
                         label={trans.address} />
+                    <Grid
+                        container
+                        direction='row'
+                        justify='space-between'
+                        alignItems='center'
+                        style={{ marginBottom: '15px' }}>
+                        <TextField
+                            label={`${trans.money}${trans.dividend}`}
+                            style={{ marginTop: 20, width: 300 }}
+                            type='number'
+                            variant='outlined'
+                            name='dividend'
+                            onChange={this.onChange}
+                            InputProps={{ inputProps: { min: 0 } }} />
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Grid
@@ -234,7 +257,7 @@ export default class member extends Component {
 
     // POPUP DELETE WINDOW
     renderDelete() {
-        const { openDelete, Mb_id } = this.state
+        const { openDelete, Mb_id, Di_id } = this.state
         return (
             <Dialog
                 fullWidth
@@ -252,7 +275,7 @@ export default class member extends Component {
                         direction='row'
                         alignItems='center'
                         justify='space-evenly'>
-                        {this.renderActionBtn('secondary', trans.delete, () => this.onDelete(Mb_id), <Done />)}
+                        {this.renderActionBtn('secondary', trans.delete, () => this.onDelete(Mb_id, Di_id), <Done />)}
                         {this.renderActionBtn('default', trans.cancel, () => this.toggleDelete(), <CloseIcon />)}
                     </Grid>
                 </DialogActions>
@@ -285,9 +308,24 @@ export default class member extends Component {
         )
     }
 
+
+    // GET DIVIDEND
+    getDividendList(Di_id) {
+        const data = { Di_id }
+        axios.post(`http://${config.host}:${config.port}/${config.path}/dividend_list`, data).then(res => {
+            const result = res.data
+            this.setState({ dividend: result[0].Di_num })
+        }).then(() => {
+            this.toggleUpdate();
+        }).catch(error => {
+            console.log(error)
+        })
+    }
+
+
     // POPUP UPDATE WINDOW
     renderUpdate() {
-        const { openUpdate, Mb_id, fname, lname, email, tel, address } = this.state
+        const { openUpdate, Mb_id, fname, lname, email, tel, address, dividend } = this.state
         return (
             <Dialog
                 fullWidth
@@ -325,6 +363,22 @@ export default class member extends Component {
                         multiline
                         rows='5'
                         label={trans.address} />
+                    <Grid
+                        container
+                        direction='row'
+                        justify='space-between'
+                        alignItems='center'
+                        style={{ marginBottom: '15px' }}>
+                        <TextField
+                            label={`${trans.money}${trans.dividend}`}
+                            style={{ marginTop: 20, width: 300 }}
+                            type='number'
+                            variant='outlined'
+                            name='dividend'
+                            defaultValue={dividend}
+                            onChange={this.onChange}
+                            InputProps={{ inputProps: { min: 0 } }} />
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Grid
@@ -344,7 +398,6 @@ export default class member extends Component {
     // MAIN WINDOW
     render() {
         const { result } = this.state
-        console.log(result)
         return (
             <Fragment>
                 {this.renderRegister()}
@@ -410,14 +463,16 @@ export default class member extends Component {
                                                         <Fab
                                                             size='small'
                                                             onClick={() => {
-                                                                this.toggleUpdate(); this.setState({
+                                                                this.setState({
                                                                     Mb_id: row.Mb_id,
                                                                     fname: row.Mb_fname,
                                                                     lname: row.Mb_lname,
                                                                     email: row.Mb_email,
                                                                     tel: row.Mb_tel,
-                                                                    address: row.Mb_address
-                                                                })
+                                                                    address: row.Mb_address,
+                                                                    Di_id: row.Di_id
+                                                                });
+                                                                this.getDividendList(row.Di_id);
                                                             }}
                                                             color='default'>
                                                             <Edit />

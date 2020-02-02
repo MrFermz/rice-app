@@ -74,15 +74,6 @@ function connectForeignKey() {
     })
 
 
-    // Pm_id
-    let sqlStaff = 'ALTER TABLE staff \
-        ADD FOREIGN KEY (Pm_id) REFERENCES payment(Pm_id)'
-    conn.query(sqlStaff, function (error, result) {
-        if (error) throw error
-        console.log('Added FK Pm_id')
-    })
-
-
     // Mb_id, St_id
     let sqlPayment = 'ALTER TABLE payment \
     ADD FOREIGN KEY (Mb_id) REFERENCES member(Mb_id), \
@@ -101,15 +92,6 @@ function connectForeignKey() {
         console.log('Added FK St_id')
     })
 
-
-    // Mb_id, Rc_id
-    let sqlDividend = 'ALTER TABLE dividend \
-            ADD FOREIGN KEY (Mb_id) REFERENCES member(Mb_id), \
-            ADD FOREIGN KEY (Rc_id) REFERENCES rice(Rc_id)'
-    conn.query(sqlDividend, function (error, result) {
-        if (error) throw error
-        console.log('Added FK Mb_id, Rc_id')
-    })
 }
 
 function connectTableAdmin() {
@@ -156,7 +138,6 @@ function connectTableStaff() {
             St_salary VARCHAR(250), \
             St_position VARCHAR(250), \
             St_date VARCHAR(250), \
-            Pm_id INT, \
             PRIMARY KEY (St_id), \
 			UNIQUE (St_user) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
@@ -199,9 +180,8 @@ function connectTableRice() {
 function connectTableDividend() {
     let sql = 'CREATE TABLE IF NOT EXISTS dividend (\
             Di_id INT AUTO_INCREMENT, \
-            Di_amount VARCHAR(10), \
-            Mb_id INT, \
-            Rc_id INT, \
+            Di_year VARCHAR(10), \
+            Di_num VARCHAR(10), \
             PRIMARY KEY (Di_id) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
