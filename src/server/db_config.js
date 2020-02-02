@@ -25,7 +25,7 @@ function connectDB() {
     // CONNECT DATABASE
     conn.connect((error) => {
         if (error) {
-            console.log(`error: ${error}`)
+            console.log(error)
             setTimeout(connectDB, 2000)
         }
         conn.query("CREATE DATABASE IF NOT EXISTS " + mDatabase + " CHARACTER SET utf8 COLLATE utf8_general_ci", function (error, result) {
@@ -39,7 +39,6 @@ function connectDB() {
 
     // AUTO RESTART
     conn.on('error', function (error) {
-        console.log('db error', error)
         if (error.code === 'PROTOCOL_CONNECTION_LOST') {
             connectDB()
         } else {
@@ -70,7 +69,6 @@ function connectForeignKey() {
         ADD FOREIGN KEY (Di_id) REFERENCES dividend(Di_id)'
     conn.query(sqlMember, function (error, result) {
         if (error) throw error
-        console.log('Added FK Di_id')
     })
 
 
@@ -80,7 +78,6 @@ function connectForeignKey() {
     ADD FOREIGN KEY (St_id) REFERENCES staff(St_id)'
     conn.query(sqlPayment, function (error, result) {
         if (error) throw error
-        console.log('Added FK Mb_id, St_id')
     })
 
 
@@ -89,7 +86,6 @@ function connectForeignKey() {
             ADD FOREIGN KEY (St_id) REFERENCES staff(St_id)'
     conn.query(sqlRice, function (error, result) {
         if (error) throw error
-        console.log('Added FK St_id')
     })
 
 }
@@ -104,7 +100,7 @@ function connectTableAdmin() {
 		UNIQUE (Ad_user) \
     )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
-        console.log('Table admin available')
+        if (error) throw error
     })
 }
 
@@ -122,7 +118,6 @@ function connectTableMember() {
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
         if (error) throw error
-        console.log('Table member available')
     })
 }
 
@@ -143,7 +138,6 @@ function connectTableStaff() {
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
         if (error) throw error
-        console.log("Table staff Available")
     })
 }
 
@@ -158,7 +152,6 @@ function connectTablePayment() {
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
         if (error) throw error
-        console.log("Table payment Available")
     })
 }
 
@@ -173,7 +166,6 @@ function connectTableRice() {
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
         if (error) throw error
-        console.log("Table rice Available")
     })
 }
 
@@ -186,7 +178,6 @@ function connectTableDividend() {
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
         if (error) throw error
-        console.log("Table dividend Available")
     })
 }
 
@@ -197,7 +188,6 @@ function connectTableRicePrice() {
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
         if (error) throw error
-        console.log("Table rice price Available")
     })
 }
 
