@@ -45,6 +45,7 @@ export default class sidemenu extends Component {
                     {this.renderUsers('adminRice', trans.rice)}
                     {/* {this.renderUsers('adminPayment', trans.payment)} */}
                     {this.renderUsers('adminDividend', trans.dividend)}
+                    {this.renderUsers('adminRicePrice', trans.rice_price)}
                 </Fragment>
             )
         } if (type === 'staff') {

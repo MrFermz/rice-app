@@ -18,6 +18,7 @@ import {
     Typography,
     TextField,
 } from '@material-ui/core'
+import { Autocomplete } from '@material-ui/lab'
 import {
     Add as AddIcon,
     Close as CloseIcon,
@@ -372,6 +373,17 @@ export default class staff extends Component {
         )
     }
 
+    // STAFF SEARCH
+    onSelectStaff(val) {
+        let data = [val]
+        if (val) {
+            this.setState({ result: data })
+        } else {
+            this.getStaffList()
+            // this.setState({ result })
+        }
+    }
+
     render() {
         const { result } = this.state
         return (
@@ -408,6 +420,19 @@ export default class staff extends Component {
                             container
                             direction='row'
                             style={{ width: '100%' }}>
+                            <Autocomplete
+                                options={result}
+                                getOptionLabel={val => `#${val.St_id} ${val.St_fname} ${val.St_lname}`}
+                                style={{ marginTop: 20 }}
+                                onChange={(e, val) => {
+                                    this.onSelectStaff(val)
+                                }}
+                                renderInput={params => (
+                                    <TextField {...params}
+                                        label={trans.staff}
+                                        variant="outlined"
+                                        style={{ width: 400 }} />
+                                )} />
                             <TableContainer component={Paper}>
                                 <Table>
                                     <TableHead>

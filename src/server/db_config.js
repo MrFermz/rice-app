@@ -28,12 +28,12 @@ function connectDB() {
             console.log(error)
             setTimeout(connectDB, 2000)
         }
-        conn.query("CREATE DATABASE IF NOT EXISTS " + mDatabase + " CHARACTER SET utf8 COLLATE utf8_general_ci", function (error, result) {
+        conn.query("CREATE DATABASE IF NOT EXISTS " + mDatabase + " CHARACTER SET utf8 COLLATE utf8_general_ci", async function (error, result) {
             console.log("Database Available")
-            connectTable()
+            await connectTable()
 
             // Add FK
-            connectForeignKey()
+            await connectForeignKey()
         })
     })
 
@@ -64,27 +64,27 @@ function connectTable() {
 // FOREIGN KEY INIT
 function connectForeignKey() {
 
-    // Di_id
-    let sqlMember = 'ALTER TABLE member \
-        ADD FOREIGN KEY (Di_id) REFERENCES dividend(Di_id)'
-    conn.query(sqlMember, function (error, result) {
-        if (error) throw error
-    })
-
-
     // Mb_id, St_id
     let sqlPayment = 'ALTER TABLE payment \
-    ADD FOREIGN KEY (Mb_id) REFERENCES member(Mb_id), \
-    ADD FOREIGN KEY (St_id) REFERENCES staff(St_id)'
+            ADD FOREIGN KEY (Mb_id) REFERENCES member(Mb_id), \
+            ADD FOREIGN KEY (St_id) REFERENCES staff(St_id), \
+            ADD FOREIGN KEY (Ad_id) REFERENCES admin(Ad_id)'
     conn.query(sqlPayment, function (error, result) {
         if (error) throw error
     })
 
-
     // St_id
     let sqlRice = 'ALTER TABLE rice \
-            ADD FOREIGN KEY (St_id) REFERENCES staff(St_id)'
+            ADD FOREIGN KEY (St_id) REFERENCES staff(St_id), \
+            ADD FOREIGN KEY (Ad_id) REFERENCES admin(Ad_id)'
     conn.query(sqlRice, function (error, result) {
+        if (error) throw error
+    })
+
+    // Mb_id
+    let sqlDividend = 'ALTER TABLE dividend \
+            ADD FOREIGN KEY (Mb_id) REFERENCES member(Mb_id)'
+    conn.query(sqlDividend, function (error, result) {
         if (error) throw error
     })
 
@@ -92,10 +92,10 @@ function connectForeignKey() {
 
 function connectTableAdmin() {
     let sql = 'CREATE TABLE IF NOT EXISTS admin (\
-        Ad_id INT AUTO_INCREMENT, \
+        Ad_id INT(10) AUTO_INCREMENT, \
         Ad_user VARCHAR(250) NOT NULL, \
         Ad_pass VARCHAR(250) NOT NULL, \
-        Ad_date VARCHAR(250), \
+        Ad_date VARCHAR(50), \
         PRIMARY KEY (Ad_id), \
 		UNIQUE (Ad_user) \
     )ENGINE=InnoDB DEFAULT CHARSET=utf8'
@@ -106,14 +106,13 @@ function connectTableAdmin() {
 
 function connectTableMember() {
     let sql = 'CREATE TABLE IF NOT EXISTS member (\
-            Mb_id INT AUTO_INCREMENT, \
+            Mb_id INT(10) AUTO_INCREMENT, \
             Mb_fname VARCHAR(250), \
             Mb_lname VARCHAR(250), \
-            Mb_email VARCHAR(250), \
-            Mb_tel VARCHAR(10), \
+            Mb_email VARCHAR(50), \
+            Mb_tel VARCHAR(30), \
             Mb_address TEXT, \
-            Mb_date VARCHAR(250), \
-            Di_id INT, \
+            Mb_date VARCHAR(50), \
             PRIMARY KEY (Mb_id) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
@@ -123,16 +122,16 @@ function connectTableMember() {
 
 function connectTableStaff() {
     let sql = 'CREATE TABLE IF NOT EXISTS staff (\
-            St_id INT AUTO_INCREMENT, \
+            St_id INT(10) AUTO_INCREMENT, \
             St_user VARCHAR(250) NOT NULL, \
             St_pass VARCHAR(250) NOT NULL, \
             St_fname VARCHAR(250), \
             St_lname VARCHAR(250), \
             St_address TEXT, \
-            St_age VARCHAR(250), \
-            St_salary VARCHAR(250), \
-            St_position VARCHAR(250), \
-            St_date VARCHAR(250), \
+            St_age INT(10), \
+            St_salary VARCHAR(10), \
+            St_position VARCHAR(20), \
+            St_date VARCHAR(50), \
             PRIMARY KEY (St_id), \
 			UNIQUE (St_user) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
@@ -143,11 +142,12 @@ function connectTableStaff() {
 
 function connectTablePayment() {
     let sql = 'CREATE TABLE IF NOT EXISTS payment (\
-            Pm_id INT AUTO_INCREMENT, \
+            Pm_id INT(10) AUTO_INCREMENT, \
             Pm_payments VARCHAR(10), \
-            Pm_date VARCHAR(250), \
-            Mb_id INT, \
-            St_id INT, \
+            Pm_date VARCHAR(50), \
+            Mb_id INT(10), \
+            St_id INT(10), \
+            Ad_id INT(10), \
             PRIMARY KEY (Pm_id) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
@@ -157,11 +157,13 @@ function connectTablePayment() {
 
 function connectTableRice() {
     let sql = 'CREATE TABLE IF NOT EXISTS rice (\
-            Rc_id INT AUTO_INCREMENT, \
+            Rc_id INT(10) AUTO_INCREMENT, \
             Rc_kg VARCHAR(20), \
             Rc_sack VARCHAR(10), \
-            Rc_sum VARCHAR(10), \
-            St_id INT, \
+            Rc_sum INT(10), \
+            RC_date VARCHAR(50), \
+            St_id INT(10), \
+            Ad_id INT(10), \
             PRIMARY KEY (Rc_id) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
@@ -171,9 +173,10 @@ function connectTableRice() {
 
 function connectTableDividend() {
     let sql = 'CREATE TABLE IF NOT EXISTS dividend (\
-            Di_id INT AUTO_INCREMENT, \
-            Di_year VARCHAR(10), \
-            Di_num VARCHAR(10), \
+            Di_id INT(10) AUTO_INCREMENT, \
+            Di_year VARCHAR(50), \
+            Di_num FLOAT(10), \
+            Mb_id INT(10),\
             PRIMARY KEY (Di_id) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {
@@ -183,7 +186,7 @@ function connectTableDividend() {
 
 function connectTableRicePrice() {
     let sql = 'CREATE TABLE IF NOT EXISTS rice_price(\
-            Pr_id INT PRIMARY KEY AUTO_INCREMENT, \
+            Pr_id INT(10) PRIMARY KEY AUTO_INCREMENT, \
             Pr_price VARCHAR(10) \
         )ENGINE=InnoDB DEFAULT CHARSET=utf8'
     conn.query(sql, function (error, result) {

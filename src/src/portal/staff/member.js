@@ -18,6 +18,7 @@ import {
     Typography,
     TextField
 } from '@material-ui/core'
+import { Autocomplete } from '@material-ui/lab'
 import {
     Add as AddIcon,
     Close as CloseIcon,
@@ -122,21 +123,21 @@ export default class member extends Component {
 
     // DELETE MEMBER FROM DATABASE
     onDelete(Mb_id, Di_id) {
-        const data = { Mb_id }
-        axios.post(`http://${config.host}:${config.port}/${config.path}/delete_member`, data).then(res => {
+        let dataDividend = { Di_id }
+        axios.post(`http://${config.host}:${config.port}/${config.path}/delete_dividend`, dataDividend).then(res => {
             const result = res.data
             if (result.result === 'success') {
                 console.log('Delete Success')
+                window.location.reload()
             } else {
                 console.log('Delete Failed')
             }
         }).then(() => {
-            let dataDividend = { Di_id }
-            axios.post(`http://${config.host}:${config.port}/${config.path}/delete_dividend`, dataDividend).then(res => {
+            const data = { Mb_id }
+            axios.post(`http://${config.host}:${config.port}/${config.path}/delete_member`, data).then(res => {
                 const result = res.data
                 if (result.result === 'success') {
                     console.log('Delete Success')
-                    window.location.reload()
                 } else {
                     console.log('Delete Failed')
                 }
@@ -395,6 +396,17 @@ export default class member extends Component {
         )
     }
 
+    // MEMBER SEARCH
+    onSelectMember(val) {
+        let data = [val]
+        if (val) {
+            this.setState({ result: data })
+        } else {
+            this.getMemberList()
+            // this.setState({ result })
+        }
+    }
+
     // MAIN WINDOW
     render() {
         const { result } = this.state
@@ -432,6 +444,19 @@ export default class member extends Component {
                             container
                             direction='row'
                             style={{ width: '100%' }}>
+                            <Autocomplete
+                                options={result}
+                                getOptionLabel={val => `#${val.Mb_id} ${val.Mb_fname} ${val.Mb_lname}`}
+                                style={{ marginTop: 20 }}
+                                onChange={(e, val) => {
+                                    this.onSelectMember(val)
+                                }}
+                                renderInput={params => (
+                                    <TextField {...params}
+                                        label={trans.member}
+                                        variant="outlined"
+                                        style={{ width: 400 }} />
+                                )} />
                             <TableContainer component={Paper}>
                                 <Table>
                                     <TableHead>

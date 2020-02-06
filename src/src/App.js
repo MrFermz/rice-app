@@ -17,6 +17,7 @@ import adminStaff from './portal/admin/staff'
 import adminRice from './portal/admin/rice'
 import adminPayment from './portal/admin/payment'
 import adminDividend from './portal/admin/dividend'
+import adminRicePrice from './portal/admin/rice_price'
 
 
 // STAFF PORTAL
@@ -49,6 +50,7 @@ export default class App extends Component {
                     <Route path='/adminRice' component={adminRice} />
                     <Route path='/adminPayment' component={adminPayment} />
                     <Route path='/adminDividend' component={adminDividend} />
+                    <Route path='/adminRicePrice' component={adminRicePrice} />
 
                     {/* STAFF */}
                     <Route path='/staff' component={Staff} />

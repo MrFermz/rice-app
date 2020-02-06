@@ -53,11 +53,11 @@ export default class rice extends Component {
     }
 
     initPayslip() {
+        this.getSelf()
         this.getCurrentDate()
         this.getMemberList()
         this.getPayment()
         this.getRicePrice()
-        this.getSelf()
     }
 
     onSelectMember(val) {
@@ -132,19 +132,23 @@ export default class rice extends Component {
     }
 
     onSavePayment(currentDate, Mb_id, self_id, sack, paddy, rice, rice_price) {
+        const { type } = this.state
         let data = {
             Pm_date: currentDate,
             Mb_id,
             St_id: self_id,
-            Pm_payments: this.getSum(rice, rice_price)
+            Pm_payments: this.getSum(rice, rice_price),
+            type
         }
         let data2 = {
             St_id: self_id,
             Rc_kg: rice,
             Rc_sack: paddy,
-            Rc_sum: this.getSum(rice, rice_price)
+            Rc_sum: this.getSum(rice, rice_price),
+            Rc_date: currentDate,
+            type
         }
-        if (currentDate && Mb_id && self_id && rice && paddy && sack) {
+        if (currentDate && Mb_id && self_id && rice && paddy && sack && type) {
             axios.post(`http://${config.host}:${config.port}/${config.path}/payment_save`, data)
                 .then(res => {
                     const result = res.data
@@ -160,7 +164,6 @@ export default class rice extends Component {
             axios.post(`http://${config.host}:${config.port}/${config.path}/rice_save`, data2)
                 .then(res => {
                     const result = res.data
-                    console.log(result)
                     if (result.result === 'success') {
                         console.log('Save Success')
                     } else {

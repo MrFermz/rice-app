@@ -61,6 +61,7 @@ export default class dividend extends Component {
     }
 
     onSelectMember(val) {
+        console.log(val)
         if (val) {
             this.setState({
                 Mb_id: val.Mb_id,
@@ -78,6 +79,7 @@ export default class dividend extends Component {
             headers: { 'x-access-token': storedToken }
         }).then(res => {
             const result = res.data
+            console.log(result)
             this.setState({ result })
         }).catch(error => {
             console.log(error)

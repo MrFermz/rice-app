@@ -86,19 +86,26 @@ app.post('/self_Ad_id', (req, res) => {
 
 // MEMBER API
 app.post('/register_member', (req, res) => {
-    year = new Date().getFullYear()
-    let sqlDividend = `INSERT INTO dividend (Di_year, Di_num) VALUES (${year}, ${req.body.dividend})`
-    database.conn.query(sqlDividend, function (err, result) {
+    let today = new Date()
+    let year = today.getFullYear()
+    let valuesMember = [
+        [req.body.fname, req.body.lname, req.body.email, req.body.tel, req.body.address, req.body.date]
+    ]
+    let sqlMember = `INSERT INTO member (Mb_fname, Mb_lname, Mb_email, Mb_tel, Mb_address, Mb_date) VALUES ?`
+    database.conn.query(sqlMember, [valuesMember], function (err, result) {
         if (err) {
             res.json(result_failed)
         } else {
-            let Di_id = result['insertId']
-            let valuesMember = [
-                [req.body.fname, req.body.lname, req.body.email, req.body.tel, req.body.address, req.body.date, Di_id]
-            ]
-            let sqlMember = `INSERT INTO member (Mb_fname, Mb_lname, Mb_email, Mb_tel, Mb_address, Mb_date, Di_id) VALUES ?`
-            database.conn.query(sqlMember, [valuesMember], function (err, result) {
+            let Mb_id = result['insertId']
+            let valuesDividend = [[
+                year,
+                req.body.dividend,
+                Mb_id
+            ]]
+            let sqlDividend = `INSERT INTO dividend (Di_year, Di_num, Mb_id) VALUES ?`
+            database.conn.query(sqlDividend, [valuesDividend], function (err, result) {
                 if (err) {
+                    console.log(err)
                     res.json(result_failed)
                 } else {
                     const finalResult = {
@@ -110,12 +117,6 @@ app.post('/register_member', (req, res) => {
             })
         }
     })
-
-
-
-
-
-
 })
 
 app.post('/delete_member', (req, res) => {
@@ -157,7 +158,9 @@ app.post('/update_member', (req, res) => {
 })
 
 app.get('/member_list', verifyToken, (req, res) => {
-    let sql = 'SELECT * FROM member'
+    let sql = `SELECT member.Mb_id, member.Mb_fname, member.Mb_lname, member.Mb_email, member.Mb_tel, member.Mb_address, member.Mb_date, dividend.Di_id
+                FROM member
+                INNER JOIN dividend ON member.Mb_id = dividend.Mb_id`
     database.conn.query(sql, function (err, result) {
         if (err) {
             res.json(result_failed)
@@ -308,9 +311,14 @@ app.get('/rice_price', verifyToken, (req, res) => {
 })
 
 app.post('/rice_save', (req, res) => {
-    let sql = `INSERT INTO rice (Rc_kg, Rc_sack, Rc_sum, St_id) VALUES ?`
+    let sql
+    if (req.body.type == 'admin') {
+        sql = `INSERT INTO rice (Rc_kg, Rc_sack, Rc_sum, Rc_date, Ad_id) VALUES ?`
+    } else {
+        sql = `INSERT INTO rice (Rc_kg, Rc_sack, Rc_sum, Rc_date, St_id) VALUES ?`
+    }
     let values = [
-        [req.body.Rc_kg, req.body.Rc_sack, req.body.Rc_sum, req.body.St_id]
+        [req.body.Rc_kg, req.body.Rc_sack, req.body.Rc_sum, req.body.Rc_date, req.body.St_id]
     ]
     database.conn.query(sql, [values], function (error, result) {
         if (error) {
@@ -341,12 +349,18 @@ app.get('/payment_id', verifyToken, (req, res) => {
 })
 
 app.post('/payment_save', (req, res) => {
-    let sql = `INSERT INTO payment (Pm_payments, Pm_date, Mb_id, St_id) VALUES ?`
+    let sql
+    if (req.body.type == 'admin') {
+        sql = `INSERT INTO payment (Pm_payments, Pm_date, Mb_id, Ad_id) VALUES ?`
+    } else {
+        sql = `INSERT INTO payment (Pm_payments, Pm_date, Mb_id, St_id) VALUES ?`
+    }
     let values = [
         [req.body.Pm_payments, req.body.Pm_date, req.body.Mb_id, req.body.St_id]
     ]
     database.conn.query(sql, [values], function (error, result) {
         if (error) {
+            console.log(error)
             res.json(result_failed)
         } else {
             const finalResult = {
@@ -373,7 +387,6 @@ app.post('/dividend_list', (req, res) => {
     })
 })
 
-
 app.post('/update_dividend', (req, res) => {
     let sql = `UPDATE dividend 
             SET Di_num = '${req.body.dividend}'
@@ -391,7 +404,6 @@ app.post('/update_dividend', (req, res) => {
     })
 })
 
-
 app.post('/delete_dividend', (req, res) => {
     let sql = `DELETE FROM dividend 
             WHERE Di_id = ${req.body.Di_id}`
@@ -407,6 +419,44 @@ app.post('/delete_dividend', (req, res) => {
         }
     })
 })
+
+
+// RICE PRICE
+app.get('/get_rice_price', verifyToken, (req, res) => {
+    let sql = 'SELECT Pr_id, Pr_price FROM rice_price'
+    database.conn.query(sql, function (err, result) {
+        if (err) {
+            res.json(result_failed)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+            }
+        }
+    })
+})
+
+app.post('/set_rice_price', (req, res) => {
+    let sql
+    if (!req.body.id) {
+        sql = `INSERT INTO rice_price (Pr_price) VALUES (${req.body.price})`
+    } else {
+        sql = `UPDATE rice_price
+                    SET Pr_price = ${req.body.price}
+                    WHERE Pr_id = ${req.body.id}`
+    }
+    database.conn.query(sql, function (error, result) {
+        if (error) {
+            res.json(result_failed)
+        } else {
+            const finalResult = {
+                result: "success",
+                data: ""
+            }
+            res.json(finalResult)
+        }
+    })
+})
+
 
 
 module.exports = app

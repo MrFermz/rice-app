@@ -142,7 +142,8 @@ export default class rice extends Component {
             St_id: self_id,
             Rc_kg: rice,
             Rc_sack: paddy,
-            Rc_sum: this.getSum(rice, rice_price)
+            Rc_sum: this.getSum(rice, rice_price),
+            Rc_date: currentDate
         }
         if (currentDate && Mb_id && self_id && rice && paddy && sack) {
             axios.post(`http://${config.host}:${config.port}/${config.path}/payment_save`, data)
