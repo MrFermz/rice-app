@@ -42,6 +42,7 @@ export default class admin extends Component {
                             {this.renderCardsMenu(trans.rice, 'adminRice', '#AED6F1')}
                             {this.renderCardsMenu(trans.payment, 'adminPayment', '#D2B4DE')}
                             {this.renderCardsMenu(trans.dividend, 'adminDividend', '#F5B7B1')}
+                            {this.renderCardsMenu(trans.rice_price, 'adminRicePrice', '#D0FF94')}
                         </Typography>
                     </Grid>
                 </Grid>

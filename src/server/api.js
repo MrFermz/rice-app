@@ -457,6 +457,57 @@ app.post('/set_rice_price', (req, res) => {
     })
 })
 
+app.get('/getPaymentStaff', verifyToken, (req, res) => {
+    let sql =   `SELECT payment.Pm_id, 
+                        payment.Pm_payments, 
+                        payment.Pm_date, 
+                        payment.Mb_id, 
+                        payment.St_id,
+                        payment.Ad_id,
+                        member.Mb_fname,
+                        member.Mb_lname,
+                        staff.St_fname,
+                        staff.St_lname
+                 FROM payment
+                 INNER JOIN member  ON payment.Mb_id = member.Mb_id
+                 INNER JOIN staff   ON payment.St_id = staff.St_id`
+    database.conn.query(sql, function (err, result) {
+        if (err) {
+            console.log(err)
+            res.json(result_failed)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+            }
+        }
+    })
+})
+
+app.get('/getPaymentAdmin', verifyToken, (req, res) => {
+    let sql =   `SELECT payment.Pm_id, 
+                        payment.Pm_payments, 
+                        payment.Pm_date, 
+                        payment.Mb_id, 
+                        payment.St_id,
+                        payment.Ad_id,
+                        member.Mb_fname,
+                        member.Mb_lname,
+                        admin.Ad_user
+                 FROM payment
+                 INNER JOIN member  ON payment.Mb_id = member.Mb_id
+                 INNER JOIN admin   ON payment.Ad_id = admin.Ad_id`
+    database.conn.query(sql, function (err, result) {
+        if (err) {
+            console.log(err)
+            res.json(result_failed)
+        } else {
+            if (result.length > 0) {
+                res.send(result)
+            }
+        }
+    })
+})
+
 
 
 module.exports = app

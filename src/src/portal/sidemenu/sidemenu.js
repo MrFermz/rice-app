@@ -43,7 +43,7 @@ export default class sidemenu extends Component {
                     {this.renderUsers('adminMember', trans.member)}
                     {this.renderUsers('adminStaff', trans.staff)}
                     {this.renderUsers('adminRice', trans.rice)}
-                    {/* {this.renderUsers('adminPayment', trans.payment)} */}
+                    {this.renderUsers('adminPayment', trans.payment)}
                     {this.renderUsers('adminDividend', trans.dividend)}
                     {this.renderUsers('adminRicePrice', trans.rice_price)}
                 </Fragment>
@@ -54,7 +54,7 @@ export default class sidemenu extends Component {
                     {this.renderUsers('staff', trans.home)}
                     {this.renderUsers('staffMember', trans.member)}
                     {this.renderUsers('staffRice', trans.rice)}
-                    {/* {this.renderUsers('staffPayment', trans.payment)} */}
+                    {this.renderUsers('staffPayment', trans.payment)}
                     {this.renderUsers('staffDividend', trans.dividend)}
                 </Fragment>
             )
