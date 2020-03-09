@@ -34,12 +34,15 @@ export default class staff extends Component {
                         xs={10}
                         item
                         container
-                        direction='row'
+                        direction='column'
                         style={{ padding: 30 }}>
-                        {this.renderCardsMenu(trans.member, 'staffMember', '#ABEBC6')}
-                        {this.renderCardsMenu(trans.rice, 'staffRice', '#AED6F1')}
-                        {this.renderCardsMenu(trans.payment, 'staffPayment', '#D2B4DE')}
-                        {this.renderCardsMenu(trans.dividend, 'staffDividend', '#F5B7B1')}
+                        <Typography variant='h4' style={{ marginBottom: 20 }}>{trans.title}</Typography>
+                        <Typography>
+                            {this.renderCardsMenu(trans.member, 'staffMember', '#ABEBC6')}
+                            {this.renderCardsMenu(trans.rice, 'staffRice', '#AED6F1')}
+                            {this.renderCardsMenu(trans.payment, 'staffPayment', '#D2B4DE')}
+                            {this.renderCardsMenu(trans.dividend, 'staffDividend', '#F5B7B1')}
+                        </Typography>
                     </Grid>
                 </Grid>
             </Fragment>

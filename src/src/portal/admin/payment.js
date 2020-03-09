@@ -11,7 +11,8 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Paper,
+    Typography
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import Sidemenu from '../sidemenu/sidemenu'
@@ -87,6 +88,7 @@ export default class payment extends Component {
                         container
                         direction='column'
                         style={{ padding: 30 }}>
+                        <Typography variant='h4' style={{ marginBottom: 20 }}>{trans.title}</Typography>
                         <Autocomplete
                             options={result}
                             getOptionLabel={val => `#${val.Pm_id} เมื่อวันที่ ${val.Pm_date}`}
@@ -108,17 +110,17 @@ export default class payment extends Component {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>#</TableCell>
-                                            <TableCell>{trans.pay_date}</TableCell>
-                                            <TableCell>{trans.member}</TableCell>
-                                            <TableCell>{trans._amount}</TableCell>
-                                            <TableCell>{trans.operator}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>#</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.pay_date}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.member}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans._amount}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.operator}</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {result.map((row, i, ) => (
-                                            <TableRow key={i}>
-                                                <TableCell>{i + 1}</TableCell>
+                                            <TableRow key={i} style={{ backgroundColor: i % 2 === 0 ? '#F8F9F9' : '' }}>
+                                                <TableCell>{row.Pm_id}</TableCell>
                                                 <TableCell>{row.Pm_date}</TableCell>
                                                 <TableCell>{row.Mb_fname} {row.Mb_lname}</TableCell>
                                                 <TableCell>{row.Pm_payments}</TableCell>

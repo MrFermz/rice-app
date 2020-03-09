@@ -11,7 +11,8 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Paper,
+    Typography
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import Sidemenu from '../sidemenu/sidemenu'
@@ -115,6 +116,7 @@ export default class dividend extends Component {
                         container
                         direction='column'
                         style={{ padding: 30 }}>
+                        <Typography variant='h4' style={{ marginBottom: 20 }}>{trans.title}</Typography>
                         <Autocomplete
                             options={result}
                             getOptionLabel={val => `#${val.Mb_id} ${val.Mb_fname} ${val.Mb_lname}`}
@@ -137,15 +139,15 @@ export default class dividend extends Component {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>#</TableCell>
-                                            <TableCell>{trans.year}</TableCell>
-                                            <TableCell>{trans.amount}{trans.money}</TableCell>
-                                            <TableCell>{trans.money}{trans.total}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>#</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.year}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.amount}{trans.money}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.money}{trans.total}</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {dividend.map((row, i, ) => (
-                                            <TableRow key={i}>
+                                            <TableRow key={i} style={{ backgroundColor: i % 2 === 0 ? '#F8F9F9' : '' }}>
                                                 <TableCell>{i + 1}</TableCell>
                                                 <TableCell>{row.Di_year}</TableCell>
                                                 <TableCell>{row.Di_num}</TableCell>

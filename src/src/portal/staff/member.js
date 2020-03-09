@@ -233,7 +233,7 @@ export default class member extends Component {
                         alignItems='center'
                         style={{ marginBottom: '15px' }}>
                         <TextField
-                            label={`${trans.money}${trans.dividend}`}
+                            label={`${trans.deposit}`}
                             style={{ marginTop: 20, width: 300 }}
                             type='number'
                             variant='outlined'
@@ -371,7 +371,7 @@ export default class member extends Component {
                         alignItems='center'
                         style={{ marginBottom: '15px' }}>
                         <TextField
-                            label={`${trans.money}${trans.dividend}`}
+                            label={`${trans.deposit}`}
                             style={{ marginTop: 20, width: 300 }}
                             type='number'
                             variant='outlined'
@@ -428,6 +428,7 @@ export default class member extends Component {
                         container
                         direction='column'
                         style={{ padding: 30 }}>
+                        <Typography variant='h4' style={{ marginBottom: 20 }}>{trans.title}</Typography>
                         <Grid
                             container
                             justify='flex-end'
@@ -461,18 +462,18 @@ export default class member extends Component {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>{trans.id}</TableCell>
-                                            <TableCell>{trans.name}</TableCell>
-                                            <TableCell>{trans.email}</TableCell>
-                                            <TableCell>{trans.tel}</TableCell>
-                                            <TableCell>{trans.address}</TableCell>
-                                            <TableCell>{trans.date}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.id}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.name}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.email}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.tel}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.address}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.date}</TableCell>
                                             <TableCell></TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {result.map((row, i, ) => (
-                                            <TableRow key={i}>
+                                            <TableRow key={i} style={{ backgroundColor: i % 2 === 0 ? '#F8F9F9' : '' }}>
                                                 <TableCell>{i + 1}</TableCell>
                                                 <TableCell>{row.Mb_fname} {row.Mb_lname}</TableCell>
                                                 <TableCell>{row.Mb_email}</TableCell>

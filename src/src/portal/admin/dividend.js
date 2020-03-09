@@ -11,7 +11,8 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Paper,
+    Typography
 } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import Sidemenu from '../sidemenu/sidemenu'
@@ -61,7 +62,6 @@ export default class dividend extends Component {
     }
 
     onSelectMember(val) {
-        console.log(val)
         if (val) {
             this.setState({
                 Mb_id: val.Mb_id,
@@ -91,14 +91,29 @@ export default class dividend extends Component {
         axios.post(`http://${config.host}:${config.port}/${config.path}/dividend_list`, data)
             .then(res => {
                 const result = res.data
-                this.setState({ dividend: result })
+                this.dividendCal(result)
             }).catch(error => {
                 console.log(error)
             })
     }
 
-    dividendCal(val) {
-        return val * 2.5
+    dividendCal(result) {
+        let val = result[0].Di_num
+        let data = []
+        let sum = 0
+        for (let i = 12; i > 0; i--) {
+            let value = val * 7 / 100 * i / 12
+            value = Number(value.toFixed(2))
+            sum += value
+            data.push({ month: i, value, num: val })
+        }
+        data[12] = { month: 0, value: '', num: sum }
+        this.setState({ dividend: data })
+    }
+
+    monthMatch(month) {
+        let months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
+        return months[month - 1]
     }
 
     render() {
@@ -118,6 +133,7 @@ export default class dividend extends Component {
                         container
                         direction='column'
                         style={{ padding: 30 }}>
+                        <Typography variant='h4' style={{ marginBottom: 20 }}>{trans.title}</Typography>
                         <Autocomplete
                             options={result}
                             getOptionLabel={val => `#${val.Mb_id} ${val.Mb_fname} ${val.Mb_lname}`}
@@ -139,19 +155,29 @@ export default class dividend extends Component {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>#</TableCell>
-                                            <TableCell>{trans.year}</TableCell>
-                                            <TableCell>{trans.amount}{trans.money}</TableCell>
-                                            <TableCell>{trans.money}{trans.total}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>#</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.divi_date}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.amount}{trans.money}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.money}{trans.dividend}</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {dividend.map((row, i, ) => (
-                                            <TableRow key={i}>
-                                                <TableCell>{i + 1}</TableCell>
-                                                <TableCell>{row.Di_year}</TableCell>
-                                                <TableCell>{row.Di_num}</TableCell>
-                                                <TableCell>{this.dividendCal(row.Di_num)}</TableCell>
+                                            <TableRow key={i} style={{ backgroundColor: i % 2 === 0 ? '#F8F9F9' : '' }}>
+                                                {row.month === 0
+                                                    ?
+                                                    <Fragment>
+                                                        <TableCell colSpan={3} style={{ textAlign: 'center', fontWeight: 'bold' }}>รวม</TableCell>
+                                                        <TableCell>{row.num}</TableCell>
+                                                    </Fragment>
+                                                    :
+                                                    <Fragment>
+                                                        <TableCell>{i + 1}</TableCell>
+                                                        <TableCell>{this.monthMatch(row.month)}</TableCell>
+                                                        <TableCell>{row.num}</TableCell>
+                                                        <TableCell>{row.value}</TableCell>
+                                                    </Fragment>
+                                                }
                                             </TableRow>
                                         ))}
                                     </TableBody>

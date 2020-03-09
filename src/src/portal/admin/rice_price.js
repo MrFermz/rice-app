@@ -84,6 +84,7 @@ export default class rice_price extends Component {
                         container
                         direction='column'
                         style={{ padding: 30 }}>
+                        <Typography variant='h4' style={{ marginBottom: 20 }}>{trans.title}</Typography>
                         <Typography
                             variant='h6'
                             style={{ marginBottom: 30 }}>

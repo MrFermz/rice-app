@@ -404,6 +404,7 @@ export default class staff extends Component {
                         container
                         direction='column'
                         style={{ padding: 30 }}>
+                        <Typography variant='h4' style={{ marginBottom: 20 }}>{trans.title}</Typography>
                         <Grid
                             container
                             justify='flex-end'
@@ -437,19 +438,19 @@ export default class staff extends Component {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>{trans.id}</TableCell>
-                                            <TableCell>{trans.name}</TableCell>
-                                            <TableCell>{trans.address}</TableCell>
-                                            <TableCell>{trans.age}</TableCell>
-                                            <TableCell>{trans.salary}</TableCell>
-                                            <TableCell>{trans.position}</TableCell>
-                                            <TableCell>{trans.date}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.id}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.name}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.address}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.age}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.salary}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.position}</TableCell>
+                                            <TableCell style={{ fontWeight: "bold" }}>{trans.date}</TableCell>
                                             <TableCell></TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {result.map((row, i) => (
-                                            <TableRow key={i}>
+                                            <TableRow key={i} style={{ backgroundColor: i % 2 === 0 ? '#F8F9F9' : '' }}>
                                                 <TableCell>{i + 1}</TableCell>
                                                 <TableCell>{row.St_fname} {row.St_lname}</TableCell>
                                                 <TableCell>{row.St_address}</TableCell>

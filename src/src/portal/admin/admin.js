@@ -36,6 +36,7 @@ export default class admin extends Component {
                         container
                         direction='column'
                         style={{ padding: 30 }}>
+                        <Typography variant='h4' style={{ marginBottom: 20 }}>{trans.title}</Typography>
                         <Typography>
                             {this.renderCardsMenu(trans.member, 'adminMember', '#ABEBC6')}
                             {this.renderCardsMenu(trans.staff, 'adminStaff', '#A3E4D7')}

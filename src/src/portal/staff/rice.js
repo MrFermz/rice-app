@@ -191,7 +191,8 @@ export default class rice extends Component {
                         container
                         direction='column'
                         style={{ padding: 30 }}>
-                        <Typography variant='h4'># {paymentNo}</Typography>
+                        <Typography variant='h4' style={{ marginBottom: 20 }}>{trans.title}</Typography>
+                        <Typography variant='h4'>{`${trans.bills}: ${paymentNo}`}</Typography>
                         <Typography variant='h4' style={{ marginTop: 20 }}>{currentDate}</Typography>
                         <Autocomplete
                             options={result}

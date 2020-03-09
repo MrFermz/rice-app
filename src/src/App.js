@@ -37,7 +37,7 @@ export default class App extends Component {
     render() {
         return (
             <MuiThemeProvider theme={theme}>
-                <Router>
+                <Router basename='/rice'>
                     <Route exact path='/' component={Login} />
 
 
