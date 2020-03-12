@@ -89,14 +89,29 @@ export default class dividend extends Component {
         const data = { Di_id }
         axios.post(`http://${config.host}:${config.port}/${config.path}/dividend_list`, data).then(res => {
             const result = res.data
-            this.setState({ dividend: result })
+            this.dividendCal(result)
         }).catch(error => {
             console.log(error)
         })
     }
 
-    dividendCal(val) {
-        return val * 2.5
+    dividendCal(result) {
+        let val = result[0].Di_num
+        let data = []
+        let sum = 0
+        for (let i = 12; i > 0; i--) {
+            let value = val * 7 / 100 * i / 12
+            value = Number(value.toFixed(2))
+            sum += value
+            data.push({ month: i, value, num: val })
+        }
+        data[12] = { month: 0, value: '', num: Number(sum.toFixed(2)) }
+        this.setState({ dividend: data })
+    }
+
+    monthMatch(month) {
+        let months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
+        return months[month - 1]
     }
 
     render() {
@@ -148,10 +163,20 @@ export default class dividend extends Component {
                                     <TableBody>
                                         {dividend.map((row, i, ) => (
                                             <TableRow key={i} style={{ backgroundColor: i % 2 === 0 ? '#F8F9F9' : '' }}>
-                                                <TableCell>{i + 1}</TableCell>
-                                                <TableCell>{row.Di_year}</TableCell>
-                                                <TableCell>{row.Di_num}</TableCell>
-                                                <TableCell>{this.dividendCal(row.Di_num)}</TableCell>
+                                                {row.month === 0
+                                                    ?
+                                                    <Fragment>
+                                                        <TableCell colSpan={3} style={{ textAlign: 'center', fontWeight: 'bold' }}>รวม</TableCell>
+                                                        <TableCell>{row.num}</TableCell>
+                                                    </Fragment>
+                                                    :
+                                                    <Fragment>
+                                                        <TableCell>{i + 1}</TableCell>
+                                                        <TableCell>{this.monthMatch(row.month)}</TableCell>
+                                                        <TableCell>{row.num}</TableCell>
+                                                        <TableCell>{row.value}</TableCell>
+                                                    </Fragment>
+                                                }
                                             </TableRow>
                                         ))}
                                     </TableBody>

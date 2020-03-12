@@ -107,7 +107,7 @@ export default class dividend extends Component {
             sum += value
             data.push({ month: i, value, num: val })
         }
-        data[12] = { month: 0, value: '', num: sum }
+        data[12] = { month: 0, value: '', num: Number(sum.toFixed(2)) }
         this.setState({ dividend: data })
     }
 
