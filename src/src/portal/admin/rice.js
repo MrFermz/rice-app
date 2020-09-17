@@ -131,20 +131,20 @@ export default class rice extends Component {
             })
     }
 
-    onSavePayment(currentDate, Mb_id, self_id, sack, paddy, rice, rice_price) {
+    onSavePayment(currentDate, Mb_id, self_id, sack, paddy, netPrice) {
         const { type } = this.state
         let data = {
             Pm_date: currentDate,
             Mb_id,
             St_id: self_id,
-            Pm_payments: this.getSum(rice, rice_price),
+            Pm_payments: netPrice,
             type
         }
         let data2 = {
             St_id: self_id,
             Rc_kg: rice,
             Rc_sack: paddy,
-            Rc_sum: this.getSum(rice, rice_price),
+            Rc_sum: netPrice,
             Rc_date: currentDate,
             type
         }
@@ -244,7 +244,7 @@ export default class rice extends Component {
                             style={{ marginTop: 20 }}
                             size='small'
                             onClick={() => {
-                                this.onSavePayment(currentDate, Mb_id, self_id, sack, rice, paddy, rice_price)
+                                this.onSavePayment(currentDate, Mb_id, self_id, sack, rice, paddy, this.getSum(rice, rice_price))
                             }}
                             color='default'>
                             <Save />
