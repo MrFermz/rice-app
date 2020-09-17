@@ -49,16 +49,16 @@ export default class payment extends Component {
         axios.get(`http://${config.host}:${config.port}/${config.path}/getPaymentStaff`, {
             headers: { 'x-access-token': storedToken }
         }).then(res => {
+            resultAdmin = []
             resultStaff = res.data
 
             axios.get(`http://${config.host}:${config.port}/${config.path}/getPaymentAdmin`, {
                 headers: { 'x-access-token': storedToken }
             }).then(res => {
                 resultAdmin = res.data
-
-                result = resultStaff.concat(resultAdmin)
-                this.setState({ result })
             })
+            result = resultStaff.concat(resultAdmin)
+            this.setState({ result })
         })
     }
 
@@ -118,7 +118,7 @@ export default class payment extends Component {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {result.map((row, i, ) => (
+                                        {result.map((row, i) => (
                                             <TableRow key={i} style={{ backgroundColor: i % 2 === 0 ? '#F8F9F9' : '' }}>
                                                 <TableCell>{row.Pm_id}</TableCell>
                                                 <TableCell>{row.Pm_date}</TableCell>
