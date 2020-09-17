@@ -114,8 +114,7 @@ export default class rice extends Component {
     }
 
     getSum(amount, rice_price) {
-        let SUM = new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(amount * rice_price)
-        return SUM
+        return amount * rice_price
     }
 
     getSelf() {
@@ -131,18 +130,18 @@ export default class rice extends Component {
             })
     }
 
-    onSavePayment(currentDate, Mb_id, self_id, sack, paddy, rice, rice_price) {
+    onSavePayment(currentDate, Mb_id, self_id, sack, paddy, netPrice) {
         let data = {
             Pm_date: currentDate,
             Mb_id,
             St_id: self_id,
-            Pm_payments: this.getSum(rice, rice_price)
+            Pm_payments: netPrice
         }
         let data2 = {
             St_id: self_id,
             Rc_kg: rice,
             Rc_sack: paddy,
-            Rc_sum: this.getSum(rice, rice_price),
+            Rc_sum: netPrice,
             Rc_date: currentDate
         }
         if (currentDate && Mb_id && self_id && rice && paddy && sack) {
@@ -196,7 +195,7 @@ export default class rice extends Component {
                         <Typography variant='h4' style={{ marginTop: 20 }}>{currentDate}</Typography>
                         <Autocomplete
                             options={result}
-                            getOptionLabel={val => `#${val.Mb_id} ${val.Mb_fname} ${val.Mb_lname}`}
+                            getOptionLabel={val => `${val.Mb_fname} ${val.Mb_lname}`}
                             style={{ width: 620, marginTop: 20 }}
                             onChange={(e, val) => {
                                 this.onSelectMember(val)
@@ -241,7 +240,7 @@ export default class rice extends Component {
                             style={{ marginTop: 20 }}
                             size='small'
                             onClick={() => {
-                                this.onSavePayment(currentDate, Mb_id, self_id, sack, rice, paddy, rice_price)
+                                this.onSavePayment(currentDate, Mb_id, self_id, sack, paddy, this.getSum(rice, rice_price))
                             }}
                             color='default'>
                             <Save />

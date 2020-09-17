@@ -199,7 +199,7 @@ export default class rice extends Component {
                         <Typography variant='h4' style={{ marginTop: 20 }}>{currentDate}</Typography>
                         <Autocomplete
                             options={result}
-                            getOptionLabel={val => `#${val.Mb_id} ${val.Mb_fname} ${val.Mb_lname}`}
+                            getOptionLabel={val => `${val.Mb_fname} ${val.Mb_lname}`}
                             style={{ width: 620, marginTop: 20 }}
                             onChange={(e, val) => {
                                 this.onSelectMember(val)
