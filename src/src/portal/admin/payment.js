@@ -46,18 +46,18 @@ export default class payment extends Component {
         const { storedToken } = this.state
         let resultStaff = [], resultAdmin = []
         let result = []
-        axios.get(`http://${config.host}:${config.port}/${config.path}/getPaymentStaff`, {
+        axios.get(`http://${config.host}:${config.port}/${config.path}/getPaymentAdmin`, {
             headers: { 'x-access-token': storedToken }
         }).then(res => {
-            resultAdmin = []
-            resultStaff = res.data
+            resultStaff = []
+            resultAdmin = res.data
 
-            axios.get(`http://${config.host}:${config.port}/${config.path}/getPaymentAdmin`, {
+            axios.get(`http://${config.host}:${config.port}/${config.path}/getPaymentStaff`, {
                 headers: { 'x-access-token': storedToken }
             }).then(res => {
-                resultAdmin = res.data
+                resultStaff = res.data
             })
-            result = resultStaff.concat(resultAdmin)
+            result = resultAdmin.concat(resultStaff)
             this.setState({ result })
         })
     }
