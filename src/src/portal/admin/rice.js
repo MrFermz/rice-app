@@ -244,7 +244,7 @@ export default class rice extends Component {
                             style={{ marginTop: 20 }}
                             size='small'
                             onClick={() => {
-                                this.onSavePayment(currentDate, Mb_id, self_id, sack, rice, paddy, this.getSum(rice, rice_price))
+                                this.onSavePayment(currentDate, Mb_id, self_id, sack, paddy, this.getSum(rice, rice_price))
                             }}
                             color='default'>
                             <Save />
